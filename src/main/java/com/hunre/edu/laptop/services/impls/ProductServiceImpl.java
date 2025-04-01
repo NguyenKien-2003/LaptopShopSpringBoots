@@ -391,7 +391,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductVariantDetailsResponse> getTopSellingProducts(int limit) {
-        Pageable pageable = PageRequest.of(0, limit);
+        Pageable pageable = PageRequest.of(0, limit);   
         return productVariantRepository.findTopSellingProducts(pageable)
             .getContent()
             .stream()
