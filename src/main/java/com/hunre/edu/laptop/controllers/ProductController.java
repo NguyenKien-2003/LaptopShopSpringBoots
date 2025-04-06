@@ -3,8 +3,13 @@ package com.hunre.edu.laptop.controllers;
 import com.hunre.edu.laptop.dtos.requests.ProductCreationRequest;
 import com.hunre.edu.laptop.dtos.requests.ProductUpdatetion;
 import com.hunre.edu.laptop.dtos.responses.ProductVariantDetailsResponse;
+import com.hunre.edu.laptop.models.Product;
 import com.hunre.edu.laptop.models.ProductVariant;
+import com.hunre.edu.laptop.repositories.OrderRepository;
+import com.hunre.edu.laptop.repositories.ProductRepository;
 import com.hunre.edu.laptop.services.ProductService;
+import com.hunre.edu.laptop.services.impls.DataExporterImpl;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -22,11 +28,23 @@ import java.util.List;
 public class ProductController {
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductRepository productRepository;
 
     @PostMapping("/staff/create")
     public ResponseEntity<?> createProduct(@ModelAttribute ProductCreationRequest productCreationRequest) {
         return ResponseEntity.ok(productService.createProductWithVariants(productCreationRequest));
     }
+    @GetMapping("/export/excel")
+    public void exportProductsToExcel(HttpServletResponse response) throws IOException {
+        // Lấy danh sách sản phẩm từ cơ sở dữ liệu
+        List<Product> products = productRepository.findAll();
+
+        // Khởi tạo DataExporter và xuất dữ liệu
+        DataExporterImpl dataExporter = new DataExporterImpl(products);
+        dataExporter.export(response);
+    }
+
 
 //    @GetMapping("/public/variant/{id}")
 //    public ResponseEntity<?> getProductVariant(@PathVariable Long id) {

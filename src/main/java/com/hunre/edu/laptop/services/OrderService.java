@@ -25,6 +25,7 @@ public interface OrderService {
     Page<Order> getOrdersByUser(Pageable pageable, String username);
     void updateOrderStatus(Long orderId, String status);
     void updateOrderPaid(Long orderId);
+    List<Order> getAllOrdersExcel();
     Page<Order> getAllOrders(Pageable pageable, String keyword, LocalDate startDate, LocalDate endDate);
     Order createOrderByStaff(String username, OrderCreationByStaff orderCreationByStaff);
     Order getOrderInfo(Long orderId);
@@ -39,4 +40,6 @@ public interface OrderService {
     ResponseMessage cancelOrder(Long orderId);
     Map<String, Object> getRevenueAndOrderData();
     Map<String, Object> getDailyRevenueData(LocalDate startDate, LocalDate endDate);
+
+
 }

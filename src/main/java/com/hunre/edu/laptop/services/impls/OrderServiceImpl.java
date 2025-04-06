@@ -161,6 +161,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<Order> getAllOrdersExcel() {
+        return orderRepository.findAll();
+    }
+
+
+    @Override
     public Page<Order> getAllOrders(Pageable pageable, String keyword, LocalDate startDate, LocalDate endDate) {
         if (startDate == null && endDate == null) {
             return orderRepository.findAll(pageable); // Lấy tất cả đơn hàng
@@ -513,4 +519,6 @@ public class OrderServiceImpl implements OrderService {
         data.put("orders", orders);
         return data;
     }
+
+
 }

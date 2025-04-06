@@ -13,8 +13,10 @@ import com.hunre.edu.laptop.models.enums.OrderType;
 import com.hunre.edu.laptop.models.enums.PaymentType;
 import com.hunre.edu.laptop.security.jwt.JwtService;
 import com.hunre.edu.laptop.services.OrderService;
+import com.hunre.edu.laptop.services.impls.OrderExcelExporter;
 import com.hunre.edu.laptop.services.impls.VNPayService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +41,16 @@ public class OrderController {
     private JwtService jwtService;
     @Autowired
     private VNPayService vnPayService;
+
+    @GetMapping("/export/excel")
+    public void exportOrdersToExcel(HttpServletResponse response) throws IOException {
+        // Lấy danh sách các đơn hàng từ database
+        List<Order> orders = orderService.getAllOrdersExcel();  // Lấy tất cả đơn hàng từ service
+
+        // Khởi tạo OrderExcelExporter và xuất dữ liệu
+        OrderExcelExporter orderExcelExporter = new OrderExcelExporter(orders);
+        orderExcelExporter.export(response);
+    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createOrder(HttpServletRequest request,
